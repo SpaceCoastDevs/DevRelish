@@ -52,12 +52,12 @@ function isActive(href: string) {
               </a>
             </li>
             <li>
-              <a href="/auth/signout" class="nav-link">Sign out</a>
+              <a href="/logout" class="nav-link">Sign out</a>
             </li>
           </>
         ) : (
           <li>
-            <a href="/auth/login" class:list={["nav-link nav-link-cta", { active: isActive("/auth/login") }]}>
+            <a href="/login" class:list={["nav-link nav-link-cta", { active: isActive("/login") }]}>
               Sign in
             </a>
           </li>

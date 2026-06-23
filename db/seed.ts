@@ -1,18 +1,9 @@
-import { db, Groups, Meetups, User, Account } from "astro:db";
-import { hashPassword } from "better-auth/crypto";
+import { db, Groups, Meetups, User } from "astro:db";
 
 export default async function seed() {
   const adminId = "admin-001";
   const managerId = "manager-001";
   const manager2Id = "manager-002";
-
-  // Hash passwords using better-auth's own scrypt implementation
-  // Dev credentials — change these in production
-  const [adminHash, alexHash, samHash] = await Promise.all([
-    hashPassword("admin-devrelish"),
-    hashPassword("alex-devrelish"),
-    hashPassword("sam-devrelish"),
-  ]);
 
   // ── Users ────────────────────────────────────────────────────────────────
 
@@ -43,38 +34,6 @@ export default async function seed() {
       emailVerified: true,
       role: "user",
       groupId: "group-nyc",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-  ]);
-
-  // ── Accounts (credential records for email/password login) ────────────────
-
-  await db.insert(Account).values([
-    {
-      id: "account-admin",
-      accountId: adminId,
-      providerId: "credential",
-      userId: adminId,
-      password: adminHash,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {
-      id: "account-alex",
-      accountId: managerId,
-      providerId: "credential",
-      userId: managerId,
-      password: alexHash,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {
-      id: "account-sam",
-      accountId: manager2Id,
-      providerId: "credential",
-      userId: manager2Id,
-      password: samHash,
       createdAt: new Date(),
       updatedAt: new Date(),
     },

@@ -5,7 +5,7 @@ import { eq } from "astro:db";
 import { CATEGORIES } from "../../../lib/categories";
 import { groupUrl } from "../../../lib/utils";
 
-if (!Astro.locals.user) return Astro.redirect("/auth/login");
+if (!Astro.locals.user) return Astro.redirect("/login");
 const user = Astro.locals.user;
 
 const [group] = user.groupId

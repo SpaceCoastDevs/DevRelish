@@ -4,7 +4,7 @@ import ImportMeetupForm from '../../../components/meetups/ImportMeetupForm';
 import { db, Groups } from 'astro:db';
 import { eq } from 'astro:db';
 
-if (!Astro.locals.user) return Astro.redirect('/auth/login');
+if (!Astro.locals.user) return Astro.redirect('/login');
 const user = Astro.locals.user;
 
 const [group] = user.groupId

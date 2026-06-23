@@ -130,7 +130,7 @@ const Followers = defineTable({
   },
 });
 
-// ── better-auth Tables ────────────────────────────────────────────────────────
+// ── Host Auth User Profile Table ──────────────────────────────────────────────
 
 const User = defineTable({
   columns: {
@@ -141,60 +141,16 @@ const User = defineTable({
     image: column.text({ optional: true }),
     createdAt: column.date(),
     updatedAt: column.date(),
-    // Admin plugin
+    // Optional authorization metadata supplied/synced by host auth.
     role: column.text({ optional: true }),
     banned: column.boolean({ optional: true }),
     banReason: column.text({ optional: true }),
     banExpires: column.date({ optional: true }),
-    // App-specific: link manager to their group
+    // Link a manager to their group.
     groupId: column.text({ optional: true }),
   },
 });
 
-const Session = defineTable({
-  columns: {
-    id: column.text({ primaryKey: true }),
-    expiresAt: column.date(),
-    token: column.text({ unique: true }),
-    createdAt: column.date(),
-    updatedAt: column.date(),
-    ipAddress: column.text({ optional: true }),
-    userAgent: column.text({ optional: true }),
-    userId: column.text(), // soft ref to User.id
-    // Admin plugin
-    impersonatedBy: column.text({ optional: true }),
-  },
-});
-
-const Account = defineTable({
-  columns: {
-    id: column.text({ primaryKey: true }),
-    accountId: column.text(),
-    providerId: column.text(),
-    userId: column.text(), // soft ref to User.id
-    accessToken: column.text({ optional: true }),
-    refreshToken: column.text({ optional: true }),
-    idToken: column.text({ optional: true }),
-    accessTokenExpiresAt: column.date({ optional: true }),
-    refreshTokenExpiresAt: column.date({ optional: true }),
-    scope: column.text({ optional: true }),
-    password: column.text({ optional: true }),
-    createdAt: column.date(),
-    updatedAt: column.date(),
-  },
-});
-
-const Verification = defineTable({
-  columns: {
-    id: column.text({ primaryKey: true }),
-    identifier: column.text(),
-    value: column.text(),
-    expiresAt: column.date(),
-    createdAt: column.date({ optional: true }),
-    updatedAt: column.date({ optional: true }),
-  },
-});
-
 export default defineDb({
-  tables: { Groups, Meetups, RSVPs, GatheringSpeakers, GatheringSessions, GatheringSessionSpeakers, GroupInvites, ContactMessages, Followers, User, Session, Account, Verification },
+  tables: { Groups, Meetups, RSVPs, GatheringSpeakers, GatheringSessions, GatheringSessionSpeakers, GroupInvites, ContactMessages, Followers, User },
 });

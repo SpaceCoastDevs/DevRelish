@@ -5,7 +5,7 @@ import { eq } from "astro:db";
 export const prerender = false;
 
 export const POST: APIRoute = async ({ params, locals, request }) => {
-  if (!locals.user) return redirect("/auth/login");
+  if (!locals.user) return redirect("/login");
 
   const { rsvpId } = params;
   if (!rsvpId) return redirect("/dashboard");

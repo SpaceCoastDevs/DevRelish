@@ -1,13 +1,14 @@
 {
-  "name": "devrelish",
+  "name": "astro-devrelish",
   "type": "module",
   "version": "0.1.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro db push --remote && astro build --remote",
+    "build": "astro check",
     "preview": "astro preview",
     "astro": "astro",
-    "db:push": "astro db push --remote"
+    "db:push": "astro db push --remote",
+    "check": "astro check"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.8",
@@ -16,7 +17,6 @@
     "@astrojs/node": "^10.0.4",
     "@astrojs/react": "^4.2.1",
     "astro": "^6.1.1",
-    "better-auth": "^1.2.7",
     "cloudinary": "^2.10.0",
     "drizzle-orm": "^0.45.2",
     "marked": "^17.0.5",
@@ -30,5 +30,16 @@
     "@types/react-dom": "^19.0.0",
     "@types/sanitize-html": "^2.16.1",
     "typescript": "^5.7.3"
-  }
+  },
+  "description": "Astro integration for adding DevRel(ish) community and gathering pages to an Astro site.",
+  "main": "./integration.mjs",
+  "exports": {
+    ".": {
+      "types": "./integration.d.ts",
+      "default": "./integration.mjs"
+    },
+    "./db/config": "./db/config.ts",
+    "./styles": "./src/styles/global.css"
+  },
+  "types": "./integration.d.ts"
 }

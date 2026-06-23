@@ -6,12 +6,18 @@ interface ImportMetaEnv {
   readonly CLOUDINARY_API_SECRET: string;
 }
 
-type BetterAuthUser = typeof import("./lib/auth").auth.$Infer.Session.user;
-type BetterAuthSession = typeof import("./lib/auth").auth.$Infer.Session.session;
+type DevRelishUser = {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  role?: string | null;
+  groupId?: string | null;
+};
 
 declare namespace App {
   interface Locals {
-    user: BetterAuthUser | null;
-    session: BetterAuthSession | null;
+    /** Supplied by the host Astro site's auth middleware. */
+    user: DevRelishUser | null;
+    session?: unknown;
   }
 }

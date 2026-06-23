@@ -4,7 +4,7 @@ import { db, Groups, Meetups, RSVPs } from "astro:db";
 import { eq, and, asc } from "astro:db";
 import { formatDate, formatTime } from "../../../../lib/utils";
 
-if (!Astro.locals.user) return Astro.redirect("/auth/login");
+if (!Astro.locals.user) return Astro.redirect("/login");
 const user = Astro.locals.user;
 const { id } = Astro.params;
 

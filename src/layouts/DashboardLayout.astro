@@ -10,7 +10,7 @@ const { title } = Astro.props;
 const user = Astro.locals.user;
 
 if (!user) {
-  return Astro.redirect("/auth/login");
+  return Astro.redirect("/login");
 }
 ---
 

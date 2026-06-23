@@ -4,7 +4,7 @@ import { db, User, Groups, GroupInvites } from "astro:db";
 import { eq, and, gt } from "astro:db";
 import { generateId } from "../../lib/utils";
 
-if (!Astro.locals.user) return Astro.redirect("/auth/login");
+if (!Astro.locals.user) return Astro.redirect("/login");
 const user = Astro.locals.user;
 if (!user.groupId) return Astro.redirect("/dashboard");
 
