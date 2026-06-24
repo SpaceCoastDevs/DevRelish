@@ -138,3 +138,6 @@ dist
 ## Build Artifacts
 .astro/
 .netlify/
+
+#pnpm
+.pnpm-store
