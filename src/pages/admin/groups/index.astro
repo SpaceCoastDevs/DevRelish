@@ -1,7 +1,7 @@
 ---
 import DashboardLayout from "../../../layouts/DashboardLayout.astro";
-import { db, Groups, User } from "astro:db";
-import { desc, isNotNull } from "astro:db";
+import { db, Groups, User } from "devrelish:db";
+import { desc, isNotNull } from "devrelish:db";
 import { withBase } from "../../../lib/utils";
 
 if (!Astro.locals.user) return Astro.redirect(withBase("/login"));

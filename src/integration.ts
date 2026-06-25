@@ -1,6 +1,11 @@
-import type { AstroIntegration } from "astro";
+/// <reference path="../devrelish-db.d.ts" />
 
-type DevRelishOptions = {
+import type { AstroIntegration } from "astro";
+import { isAbsolute, resolve } from "node:path";
+import type {} from "../devrelish-db";
+import { fileURLToPath } from "node:url";
+
+export type DevRelishOptions = {
   /** Mount path for DevRelish routes. Defaults to the site root. */
   base?: `/${string}`;
   /** Public site origin override. Defaults to Astro's site config, then the incoming request origin. */
@@ -11,6 +16,11 @@ type DevRelishOptions = {
   supportEmail?: string;
   /** Sender email address for transactional email. Defaults to RESEND_FROM, then supportEmail. */
   fromEmail?: string;
+  /**
+   * Module that exports `db`, DevRelish schema tables, and Drizzle query helpers.
+   * Defaults to DevRelish's libSQL client, but can point at a host-owned Drizzle adapter.
+   */
+  databaseModule?: string;
 };
 
 const routes = [
@@ -86,6 +96,18 @@ function mountPattern(base: string, pattern: string) {
   return pattern === "/" ? base : `${base}${pattern}`;
 }
 
+function resolveDatabaseModule(databaseModule: string | undefined, root: URL) {
+  if (!databaseModule) {
+    return fileURLToPath(new URL("./src/db/index.ts", import.meta.url));
+  }
+
+  if (databaseModule.startsWith(".") || databaseModule.startsWith("/")) {
+    return isAbsolute(databaseModule) ? databaseModule : resolve(fileURLToPath(root), databaseModule);
+  }
+
+  return databaseModule;
+}
+
 export default function devRelish(options: DevRelishOptions = {}): AstroIntegration {
   const base = normalizeBase(options.base);
   const siteName = options.siteName ?? "DevRel(ish)";
@@ -94,17 +116,17 @@ export default function devRelish(options: DevRelishOptions = {}): AstroIntegrat
   return {
     name: "devrelish",
     hooks: {
-      "astro:db:setup"({ extendDb }: any) {
-        extendDb({
-          configEntrypoint: new URL("./db/config.ts", import.meta.url),
-          seedEntrypoint: new URL("./db/seed.ts", import.meta.url),
-        });
-      },
       "astro:config:setup"({ config, injectRoute, logger, updateConfig }) {
         const siteUrl = normalizeSiteUrl(options.siteUrl ?? config.site);
+        const databaseModule = resolveDatabaseModule(options.databaseModule, config.root);
 
         updateConfig({
           vite: {
+            resolve: {
+              alias: {
+                "devrelish:db": databaseModule,
+              },
+            },
             define: {
               "import.meta.env.DEVRELISH_BASE": JSON.stringify(base),
               "import.meta.env.DEVRELISH_SITE_URL": JSON.stringify(siteUrl),

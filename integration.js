@@ -1,4 +1,6 @@
 // src/integration.ts
+import { isAbsolute, resolve } from "path";
+import { fileURLToPath } from "url";
 var routes = [
   { pattern: "/404", entrypoint: new URL("./src/pages/404.astro", import.meta.url) },
   { pattern: "/[customSlug]", entrypoint: new URL("./src/pages/[customSlug].astro", import.meta.url) },
@@ -68,6 +70,15 @@ function mountPattern(base, pattern) {
   if (!base) return pattern;
   return pattern === "/" ? base : `${base}${pattern}`;
 }
+function resolveDatabaseModule(databaseModule, root) {
+  if (!databaseModule) {
+    return fileURLToPath(new URL("./src/db/index.ts", import.meta.url));
+  }
+  if (databaseModule.startsWith(".") || databaseModule.startsWith("/")) {
+    return isAbsolute(databaseModule) ? databaseModule : resolve(fileURLToPath(root), databaseModule);
+  }
+  return databaseModule;
+}
 function devRelish(options = {}) {
   const base = normalizeBase(options.base);
   const siteName = options.siteName ?? "DevRel(ish)";
@@ -75,16 +86,16 @@ function devRelish(options = {}) {
   return {
     name: "devrelish",
     hooks: {
-      "astro:db:setup"({ extendDb }) {
-        extendDb({
-          configEntrypoint: new URL("./db/config.ts", import.meta.url),
-          seedEntrypoint: new URL("./db/seed.ts", import.meta.url)
-        });
-      },
       "astro:config:setup"({ config, injectRoute, logger, updateConfig }) {
         const siteUrl = normalizeSiteUrl(options.siteUrl ?? config.site);
+        const databaseModule = resolveDatabaseModule(options.databaseModule, config.root);
         updateConfig({
           vite: {
+            resolve: {
+              alias: {
+                "devrelish:db": databaseModule
+              }
+            },
             define: {
               "import.meta.env.DEVRELISH_BASE": JSON.stringify(base),
               "import.meta.env.DEVRELISH_SITE_URL": JSON.stringify(siteUrl),
